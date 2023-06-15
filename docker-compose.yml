@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  mariadb:
+    container_name: mariadb-compose
+    image: mariadb:jammy
+    restart: always
+    volumes:
+      - world-db:/var/lib/mysql
+    environment:
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=12345
+      - MARIADB_DATABASE=world-db
+      - MARIADB_ROOT_PASSWORD=12345
+    networks:
+    - alfa
+
+  phpmyadmin:
+    depends_on:
+      - mariadb
+    container_name: phpmyadmin-compose
+    image: phpmyadmin:5.2.1-apache
+    restart: always
+    ports:
+      - 8081:80
+    volumes:
+      - ./phpmyadmin:/var/lib/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - alfa
+
+networks:
+  alfa:
+
+volumes:
+  world-db:
